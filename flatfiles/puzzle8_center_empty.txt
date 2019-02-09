@@ -1,19 +1,52 @@
-"""
-For a game with 8 tiles of blocks on a 3x3 grid,
-write down the Facts and Rules to model the game state 
-shown as the follows:
+fact: (inst tile1 tile)
+fact: (inst tile2 tile)
+fact: (inst tile3 tile)
+fact: (inst tile4 tile)
+fact: (inst tile5 tile)
+fact: (inst tile6 tile)
+fact: (inst tile7 tile)
+fact: (inst tile8 tile)
 
- y\\x   pos1     pos2     pos3
-     ┌────────┬────────┬────────┐
-pos1 │ tile1  │ tile2  │ tile3  │
-     ├────────┼────────┼────────┤
-pos2 │ tile8  │ empty  │ tile4  │
-     ├────────┼────────┼────────┤
-pos3 │ tile7  │ tile6  │ tile5  │
-     └────────┴────────┴────────┘
+fact: (inst empty tile)
 
-Example: 
-fact: (pred obj1 obj2)
-rule: ((pred obj1 obj2) (pred obj2 obj3)) -> (pred obj1 obj3)
+fact: (inst pos1 pos)
+fact: (inst pos2 pos)
+fact: (inst pos3 pos)
 
-"""
+fact: (loc tile1 pos1 pos1)
+fact: (loc tile2 pos2 pos1)
+fact: (loc tile3 pos3 pos1)
+fact: (loc tile4 pos3 pos2)
+fact: (loc tile5 pos3 pos3)
+fact: (loc tile6 pos2 pos3)
+fact: (loc tile7 pos1 pos3)
+fact: (loc tile8 pos1 pos2)
+
+fact:(loc empty pos2 pos2)
+
+rule: ((inst ?t tile)(inst ?r tile)(adjacent ?t ?r)) -> (adjacent ?r ?t)
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos1 pos1)(loc ?r pos2 pos1)->(adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos1 pos1)(loc ?r pos1 pos2)-> (adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos2 pos1)(loc ?r pos3 pos1)-> (adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos2 pos1)(loc ?r pos2 pos2)-> (adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos2 pos2)(loc ?r pos1 pos2)-> (adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos2 pos2)(loc ?r pos2 pos3)-> (adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos1 pos3)(loc ?r pos1 pos2)-> (adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos1 pos3)(loc ?r pos2 pos3)-> (adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos2 pos3)(loc ?r pos3 pos3)-> (adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos3 pos2)(loc ?r pos3 pos3)-> (adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos3 pos2)(loc ?r pos2 pos2)-> (adjacent ?t ?r))
+
+rule: ((inst ?t tile)(inst ?r tile)(loc ?t pos3 pos2)(loc ?r pos3 pos1)-> (adjacent ?t ?r))
+rule: ((inst ?piece tile)(adjacent ?piece empty)(inst ?initialX pos)(inst ?initialY pos)(inst ?targetx pos)(inst ?targety pos)(loc ?piece ?initialX ?initialY)(loc empty ?targetx ?targety) -> (movable ?piece ?initialX ?initialY ?targetx ?targety))
